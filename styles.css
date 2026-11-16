@@ -464,3 +464,18 @@ body:not(.is-intro) .intro{opacity:0;visibility:hidden;pointer-events:none}
 @media (min-width:1300px){
   .grid{grid-template-columns:repeat(4,1fr)}
 }
+
+/* ── Mobile touch polish ───────────────────────────────────── */
+.card,.tile,.fc,.chip,.icon-btn{transition-property:opacity,transform,border-color,box-shadow,scale,color,background;}
+.card:active,.fc:active,.tile:active{scale:.97;transition-duration:.15s}
+.sheet__card::before{content:"";position:sticky;top:8px;display:block;width:44px;height:5px;margin:8px auto -13px;border-radius:5px;
+  background:rgba(255,255,255,.35);z-index:4}
+.sheet--info .sheet__card::before{margin-bottom:0}
+.sheet__card.dragging{transition:none}
+@media (max-width:899px){
+  .chip{height:40px;font-size:14.5px}
+  .rail__ink{height:40px}
+  .card__n{font-size:15.5px}
+  .card__f .price{font-size:19px}
+}
+@media (min-width:900px){.sheet__card::before{display:none}}

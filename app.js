@@ -379,6 +379,24 @@
     reduce ? done() : setTimeout(done, 600);
   }
   $$("[data-close]").forEach(b => b.addEventListener("click", () => closeDlg(b.closest(".sheet, .search"))));
+
+  // swipe a sheet down to dismiss (phones)
+  $$(".sheet").forEach(sh => {
+    const card = $(".sheet__card", sh);
+    let y0 = null, dy = 0;
+    card.addEventListener("touchstart", e => { if (card.scrollTop <= 0) { y0 = e.touches[0].clientY; dy = 0; } }, { passive: true });
+    card.addEventListener("touchmove", e => {
+      if (y0 == null) return;
+      dy = e.touches[0].clientY - y0;
+      if (dy > 0) { card.classList.add("dragging"); card.style.transform = `translateY(${dy}px)`; }
+    }, { passive: true });
+    card.addEventListener("touchend", () => {
+      if (y0 == null) return;
+      card.classList.remove("dragging"); card.style.transform = "";
+      if (dy > 110) closeDlg(sh);
+      y0 = null;
+    });
+  });
   addEventListener("keydown", e => { if (e.key === "Escape") $$(".sheet:not([hidden]), .search:not([hidden])").forEach(closeDlg); });
 
   /* ── Item sheet with shared-element flight ───────────── */
