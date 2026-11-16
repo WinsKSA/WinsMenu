@@ -100,21 +100,21 @@ try:
                 dst = "assets/thumb/" + os.path.basename(i["img"])
                 if not os.path.exists(os.path.join(ROOT, dst)):
                     im = Image.open(src).convert("RGB")
-                    im.thumbnail((360, 360), Image.LANCZOS)
-                    im.save(os.path.join(ROOT, dst), quality=82, optimize=True, progressive=True)
+                    im.thumbnail((640, 640), Image.LANCZOS)
+                    im.save(os.path.join(ROOT, dst), quality=86, optimize=True, progressive=True)
                 i["thumb"] = dst
 except ImportError:
     print("Pillow missing: no thumbnails", file=sys.stderr)
 
-# medium copies (800px) for banners, feature cards and the dish sheet
+# medium copies (1200px) for banners, feature cards and the dish sheet
 try:
     import glob
     os.makedirs(os.path.join(ROOT, "assets", "mid"), exist_ok=True)
     for p in glob.glob(os.path.join(IMG_DIR, "*.jpg")):
         d = os.path.join(ROOT, "assets", "mid", os.path.basename(p))
         if not os.path.exists(d):
-            im = Image.open(p).convert("RGB"); im.thumbnail((800, 800), Image.LANCZOS)
-            im.save(d, quality=80, optimize=True, progressive=True)
+            im = Image.open(p).convert("RGB"); im.thumbnail((1200, 1200), Image.LANCZOS)
+            im.save(d, quality=86, optimize=True, progressive=True)
 except NameError:
     pass
 

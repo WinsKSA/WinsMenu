@@ -60,8 +60,9 @@
     setTimeout(() => {
       document.body.classList.remove("is-intro");
       $$(".hero .reveal").forEach(el => el.classList.add("in"));
+      $("#heroMark").classList.add("spell");
       startCounters();
-    }, reduce ? 0 : 1500);
+    }, reduce ? 0 : 2000);
     store.set("wanas-intro", "1");
   }
   // gate effects: equalizer bars under the logo + sparks rising inside the arch
@@ -75,11 +76,15 @@
   const forceIntro = new URLSearchParams(location.search).has("intro");
   if (reduce || (store.get("wanas-intro") === "1" && !forceIntro)) {
     intro.classList.add("opening"); document.body.classList.remove("is-intro");
-    requestAnimationFrame(() => $$(".hero .reveal").forEach(el => el.classList.add("in")));
+    requestAnimationFrame(() => { $$(".hero .reveal").forEach(el => el.classList.add("in")); $("#heroMark").classList.add("spell"); });
   } else {
     $("#enter").addEventListener("click", e => { e.stopPropagation(); openGate(true); });
     $("#enterQuiet").addEventListener("click", e => { e.stopPropagation(); openGate(false); });
     setTimeout(() => $("#enter").focus({ preventScroll: true }), 2500);
+    // type the name out, one letter at a time, in step with the logo
+    const NAME = "ونس برو", nameEl = $("#introName");
+    [...NAME].forEach((_, i) => setTimeout(() => { nameEl.textContent = NAME.slice(0, i + 1); }, 900 + i * 430));
+    setTimeout(() => nameEl.classList.add("done"), 900 + NAME.length * 430 + 400);
   }
 
   /* ── Hero stats, marquee, tiles ──────────────────────── */
@@ -307,6 +312,12 @@
         const p = (r.top + r.height / 2 - vh / 2) / vh;
         img.style.transform = `translate3d(0,${(p * 12).toFixed(2)}%,0) scale(1.02)`;
       });
+      if (!reduce && innerWidth < 900) $$(".sec").forEach(sec => {
+        const bn = sec.firstElementChild, gr = bn.nextElementSibling, b = bn.getBoundingClientRect();
+        if (b.bottom < 0 || b.top > vh) return;
+        const cover = Math.max(0, Math.min(1, (b.bottom - gr.getBoundingClientRect().top - 28) / b.height));
+        bn.style.setProperty("--cover", cover.toFixed(3));
+      });
       const m = $("#menu"), mt = m.offsetTop, mh = m.offsetHeight;
       $("#progress").style.transform = `scaleX(${Math.max(0, Math.min(1, (scrollY + vh * .5 - mt) / mh)).toFixed(3)})`;
       $("#toTop").classList.toggle("show", scrollY > vh * 1.4);
@@ -319,7 +330,7 @@
 
   // relight the sign on tap
   $("#heroMark").addEventListener("click", () => {
-    const m = $("#heroMark"); m.classList.remove("relight"); void m.offsetWidth; m.classList.add("relight"); A?.bloom();
+    const m = $("#heroMark"); m.classList.remove("spell"); void m.offsetWidth; m.classList.add("spell"); A?.bloom();
   });
 
   // counters
@@ -412,7 +423,7 @@
   /* ── Item sheet with shared-element flight ───────────── */
   function openItem(it, fromEl) {
     const sheet = $("#sheet"), media = $("#sheetMedia");
-    media.innerHTML = it.img ? `<img src="${esc(mid(it.img))}" alt="${esc(it.name)}">` : `<div class="plate plate--empty" style="height:100%"><i></i></div>`;
+    media.innerHTML = it.img ? `<img src="${esc(it.img)}" alt="${esc(it.name)}">` : `<div class="plate plate--empty" style="height:100%"><i></i></div>`;
     let viz = "";
     if (it.cal) {
       const pct = Math.min(100, it.cal / DAILY * 100), C = 2 * Math.PI * 32;
