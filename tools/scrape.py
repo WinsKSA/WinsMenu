@@ -129,3 +129,7 @@ for c in menu:
 with open(os.path.join(ROOT, "data", "menu.js"), "w", encoding="utf-8") as f:
     f.write("window.MENU=" + json.dumps(menu, ensure_ascii=False, separators=(",", ":")) + ";")
 print("items:", sum(len(s["items"]) for c in menu for s in c["sections"]), "images:", len(urls), file=sys.stderr)
+
+# rebuild the sharpened display copies (assets/mid, assets/thumb) and photo widths
+import subprocess
+subprocess.run([sys.executable, os.path.join(ROOT, "tools", "enhance.py")], check=False)

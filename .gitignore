@@ -3,3 +3,5 @@ tools/*.txt
 tools/*.log
 tools/*.png
 __pycache__/
+tools/models/
+tools/_*.py

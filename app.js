@@ -12,7 +12,8 @@
   const fmt = p => (p == null ? "" : Number.isInteger(p) ? String(p) : p.toFixed(2));
   const SAR = '<svg class="sar" aria-label="ريال"><use href="#sar"/></svg>';
   const DAILY = 2000;
-  const mid = p => p ? p.replace("assets/img/", "assets/mid/") : p;
+  const PV = "?p=4";                                  // bump when photos are regenerated
+  const mid = p => p ? p.replace("assets/img/", "assets/mid/") + PV : p;
   const isParty = s => /حفلات/.test(s.name);
   const store = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
 
@@ -126,7 +127,7 @@
   /* ── Rendering ───────────────────────────────────────── */
   function plate(it, big = false) {
     if (!it.img) return `<div class="plate plate--empty" aria-hidden="true"><i></i></div>`;
-    const src = big ? mid(it.img) : (it.thumb || it.img);
+    const src = big ? mid(it.img) : ((it.thumb || it.img) + PV);
     return `<div class="plate"><img src="${esc(src)}" alt="" loading="lazy" decoding="async"></div>`;
   }
   function kcal(it) {
@@ -151,7 +152,7 @@
           </div>
         </div></button>`;
     }
-    const hero = i === 0 && (sec.items.length > 2 || sec.items.length === 1);
+    const hero = i === 0 && (sec.items.length > 2 || sec.items.length === 1) && (it.w || 0) >= 700;
     return `<button class="card${hero ? " card--hero" : ""}" data-k="${it._k}" style="transition-delay:${(i % 2) * 60}ms">
       ${plate(it, hero)}
       <div class="card__b">
@@ -423,7 +424,7 @@
   /* ── Item sheet with shared-element flight ───────────── */
   function openItem(it, fromEl) {
     const sheet = $("#sheet"), media = $("#sheetMedia");
-    media.innerHTML = it.img ? `<img src="${esc(it.img)}" alt="${esc(it.name)}">` : `<div class="plate plate--empty" style="height:100%"><i></i></div>`;
+    media.innerHTML = it.img ? `<img src="${esc(mid(it.img))}" alt="${esc(it.name)}">` : `<div class="plate plate--empty" style="height:100%"><i></i></div>`;
     let viz = "";
     if (it.cal) {
       const pct = Math.min(100, it.cal / DAILY * 100), C = 2 * Math.PI * 32;
