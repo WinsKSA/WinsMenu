@@ -500,6 +500,30 @@
   $("#allergens").innerHTML = ALLERGENS.map(([b, s]) => `<li><b>${esc(b)}</b><span>${esc(s)}</span></li>`).join("");
   ["#openInfo", "#openInfo2"].forEach(s => $(s).addEventListener("click", () => { openDlg($("#info")); A?.bloom(); }));
 
+  /* ── Share the menu ──────────────────────────────────── */
+  let toastT;
+  function toast(msg) {
+    const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("show"), 2600);
+  }
+  async function shareMenu() {
+    const url = location.origin + location.pathname;
+    const data = { title: "ونس برو — المنيو", text: "منيو ونس برو: المطعم والكافيه", url };
+    A?.tap();
+    if (navigator.share) {
+      try { await navigator.share(data); } catch (e) { /* closed by the user */ }
+      return;
+    }
+    try { await navigator.clipboard.writeText(url); toast("تم نسخ رابط المنيو"); }
+    catch (e) {
+      const ta = document.createElement("textarea"); ta.value = url; ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand("copy"); } catch (e2) {}
+      ta.remove(); toast(ok ? "تم نسخ رابط المنيو" : url);
+    }
+  }
+  ["#share", "#share2"].forEach(s => $(s).addEventListener("click", shareMenu));
+
   /* ── Boot ────────────────────────────────────────────── */
   seg.dataset.i = mode;
   setMode(mode, false);

@@ -557,3 +557,13 @@ body:not(.is-intro) .intro{opacity:0;visibility:hidden;pointer-events:none}
   .tile{aspect-ratio:3/4.4}
 }
 @media (max-width:899px) and (prefers-reduced-motion:reduce){.banner{transform:none;filter:none}.card{transform:none}}
+
+/* ── Share ─────────────────────────────────────────────────── */
+.foot__btn{display:inline-flex;align-items:center;gap:8px;margin:4px}
+.foot__btn--fill{background:linear-gradient(180deg,#ffd29a,var(--glow));color:#1a1108;border-color:transparent;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(84px + env(safe-area-inset-bottom));translate:-50% 20px;z-index:200;max-width:86vw;padding:12px 20px;border-radius:999px;
+  background:rgba(18,13,9,.94);border:1px solid var(--line-2);color:var(--text);font-size:14px;text-align:center;opacity:0;pointer-events:none;
+  transition:opacity .35s,translate .45s var(--ease-out);backdrop-filter:blur(12px)}
+.toast.show{opacity:1;translate:-50% 0}
+@media (max-width:420px){.bar__top{gap:6px;padding-inline:12px}.icon-btn{width:44px;height:44px}.seg button{font-size:14.5px}}
+.toast{unicode-bidi:plaintext}

@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=12">
+<link rel="stylesheet" href="styles.css?v=13">
 <link rel="preload" as="image" href="assets/logo-mask.png">
 <link rel="icon" href="data:,">
 </head>
@@ -28,6 +28,7 @@
   <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c1 3.5 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5 0 2 1 3 2 3 0-3-1-5.5 1-8.5z" fill="currentColor"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-people" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M16 5.2a3 3 0 0 1 0 5.6M17.5 14.3c1.7.6 2.7 2.2 3 4.7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><path d="M12 15V4M8 8l4-4 4 4M6 12v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 
@@ -91,6 +92,7 @@
   <div class="bar__top">
     <div class="seg" id="seg" role="tablist"><span class="seg__pill" aria-hidden="true"></span></div>
     <button class="icon-btn" id="openSearch" aria-label="بحث"><svg><use href="#i-search"/></svg></button>
+    <button class="icon-btn" id="share" aria-label="مشاركة المنيو"><svg><use href="#i-share"/></svg></button>
     <button class="icon-btn" id="openInfo" aria-label="معلومات وحساسية"><svg><use href="#i-info"/></svg></button>
   </div>
   <div class="rail" id="rail"><span class="rail__ink" aria-hidden="true"></span></div>
@@ -104,6 +106,7 @@
 <footer class="foot" id="foot">
   <div class="foot__mark mark mark--solid" aria-hidden="true"></div>
   <p class="foot__note">يحتاج البالغون إلى ٢٠٠٠ سعر حراري في المتوسط يومياً، ويحتاج غير البالغين إلى ١٤٠٠ سعر حراري في المتوسط يومياً.</p>
+  <button class="foot__btn foot__btn--fill" id="share2"><svg><use href="#i-share"/></svg> شارك المنيو</button>
   <button class="foot__btn" id="openInfo2">قائمة مسببات الحساسية</button>
   <p class="foot__small">الأسعار بالريال السعودي <svg class="sar"><use href="#sar"/></svg></p>
 </footer>
@@ -147,8 +150,10 @@
   </article>
 </div>
 
-<script src="data/menu.js?v=12"></script>
-<script src="audio.js?v=12"></script>
-<script src="app.js?v=12"></script>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data/menu.js?v=13"></script>
+<script src="audio.js?v=13"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>
