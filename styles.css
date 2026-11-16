@@ -35,52 +35,74 @@ body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:300
 .mark--halo{position:absolute;inset:0;background:var(--glow);filter:blur(16px) brightness(1.2);transform:scale(1.03)}
 .mark--rim{position:absolute;inset:0;background:var(--glow-3);filter:blur(3px);opacity:.75}
 
-/* ── Welcome gate ──────────────────────────────────────────── */
-.intro{position:fixed;inset:0;z-index:250;display:grid;place-items:center;background:#030202;overflow:hidden;perspective:1400px;
-  transition:opacity 1s var(--ease) 1.1s,visibility 0s 2.2s}
-.intro__beam{position:absolute;inset:0;opacity:0;
-  background:radial-gradient(40% 50% at 50% 50%, rgba(255,190,110,.9), rgba(255,140,50,.35) 40%, transparent 75%);
-  transition:opacity 1.2s var(--ease)}
-.gate{position:absolute;inset:0;display:flex;transform-style:preserve-3d}
-.door{position:relative;flex:1;transform-style:preserve-3d;transition:transform 1.9s var(--ease-io)}
-.door--r{transform-origin:right center}
-.door--l{transform-origin:left center}
-.door__face{position:absolute;inset:0;
-  background:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'><g fill='none' stroke='%23c99a5b' stroke-opacity='.28' stroke-width='1.2'><path d='M48 10 L58 38 L86 48 L58 58 L48 86 L38 58 L10 48 L38 38 Z'/><rect x='27' y='27' width='42' height='42' transform='rotate(45 48 48)'/><rect x='27' y='27' width='42' height='42'/><circle cx='48' cy='48' r='6'/><path d='M0 0 L10 10 M96 0 L86 10 M0 96 L10 86 M96 96 L86 86'/></g></svg>") center/96px 96px,
-    linear-gradient(180deg,#1c140c,#0b0806 60%,#140e08);
-  box-shadow:inset 0 0 0 1px rgba(201,154,91,.18),inset 0 0 120px rgba(0,0,0,.85)}
-.door--r .door__face{border-left:1px solid rgba(255,190,110,.35)}
-.door--l .door__face{border-right:1px solid rgba(255,190,110,.35)}
-.door__face::before{content:"";position:absolute;inset:22px;border:1px solid rgba(201,154,91,.3);border-radius:999px 999px 6px 6px}
-.door__knob{position:absolute;top:76%;width:10px;height:46px;border-radius:6px;background:linear-gradient(90deg,#8a6435,#e2b779,#8a6435);box-shadow:0 0 18px rgba(255,170,80,.35)}
-.door--r .door__knob{left:18px}.door--l .door__knob{right:18px}
-/* light leaking through the seam */
-.gate::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;margin-left:-1px;background:var(--glow-3);
-  box-shadow:0 0 18px 4px rgba(255,170,80,.7),0 0 60px 12px rgba(255,140,50,.35);animation:seam 2.6s ease-in-out infinite}
-@keyframes seam{0%,100%{opacity:.55}50%{opacity:1}}
-.intro__center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:22px;width:min(84vw,520px);text-align:center;
-  transition:transform 1.4s var(--ease-io),opacity .8s var(--ease)}
-.intro__welcome{font-family:var(--kufi);font-size:clamp(16px,4.6vw,22px);letter-spacing:.4em;color:var(--stone);opacity:0;animation:fadeIn 1.2s ease .3s forwards}
-.intro__mark{position:relative;width:100%;
-  background:radial-gradient(closest-side,rgba(80,58,34,.9),rgba(30,21,13,.7) 60%,transparent)}
-.intro__mark .mark--halo,.intro__mark .mark--rim{opacity:0;animation:flicker 2.2s linear .9s forwards}
-.intro__mark .mark--solid{opacity:0;animation:fadeIn .7s ease .5s forwards}
-.intro__enter{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 38px;border-radius:999px;
-  background:linear-gradient(180deg,#ffd29a,var(--glow) 60%,#f59a3c);color:#1a1108;box-shadow:0 14px 40px -10px var(--glow-soft),inset 0 1px 0 rgba(255,255,255,.55);
-  opacity:0;animation:fadeIn 1s ease 2.4s forwards,pulse 2.4s ease-in-out 3.4s infinite}
-.intro__enter span{font-family:var(--kufi);font-size:20px;font-weight:600;line-height:1.2}
+/* ── Welcome gate: the arch ────────────────────────────────── */
+.intro{position:fixed;inset:0;z-index:250;display:grid;place-items:center;overflow:hidden;
+  background:radial-gradient(120% 90% at 50% 100%,#1a120a 0%,#070504 55%,#030202 100%);
+  transition:opacity .9s var(--ease),visibility 0s .9s}
+.intro__beam{position:absolute;inset:0;opacity:0;pointer-events:none;z-index:3;
+  background:radial-gradient(60% 60% at 50% 45%,#fff3dc,#ffc67e 35%,rgba(255,150,60,.6) 60%,transparent 85%);
+  transition:opacity .9s var(--ease) .35s}
+.portal{position:relative;width:min(92vw,56svh,560px);aspect-ratio:400/640;display:grid;place-items:center;
+  transition:transform 1.6s var(--ease-io),opacity .5s ease 1.1s;transform-origin:50% 46%;will-change:transform}
+.portal svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.arch{fill:none;stroke:#d9a865;stroke-width:1.4;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.2s var(--ease-io) forwards}
+.arch--2{stroke-opacity:.45;animation-delay:.25s}
+.arch--3{stroke-opacity:.22;animation-delay:.5s}
+.arch-fill{opacity:0;animation:fadeIn 1.6s ease .9s forwards,wall 5s ease-in-out 2.5s infinite}
+.arch-star{fill:none;stroke:#ffd9a3;stroke-width:1.2;transform-box:fill-box;transform-origin:center;opacity:0;
+  animation:spin 24s linear infinite,fadeIn 1s ease 1.8s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes wall{0%,100%{filter:brightness(1)}50%{filter:brightness(1.18)}}
+
+/* effects inside the arch: rotating rays + rising sparks */
+.portal__fx{position:absolute;inset:0;clip-path:url(#archClip);overflow:hidden;opacity:0;animation:fadeIn 1.5s ease 1.4s forwards}
+.rays{position:absolute;left:50%;top:46%;width:170%;aspect-ratio:1;translate:-50% -50%;
+  background:repeating-conic-gradient(from 0deg,rgba(255,214,150,.16) 0 4deg,transparent 4deg 15deg);
+  -webkit-mask:radial-gradient(closest-side,#000 8%,transparent 72%);mask:radial-gradient(closest-side,#000 8%,transparent 72%);
+  animation:spin 50s linear infinite;mix-blend-mode:screen}
+.spark{position:absolute;bottom:-3%;width:var(--s);height:var(--s);border-radius:50%;
+  background:radial-gradient(circle,#fff1d6,#ffb35a 45%,transparent 70%);animation:rise linear infinite}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}12%{opacity:1}70%{opacity:.8}100%{transform:translate(14px,-58svh);opacity:0}}
+
+.intro__center{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:clamp(10px,2.2svh,20px);
+  width:60%;margin-top:20%;text-align:center;transition:opacity .45s ease,transform .8s var(--ease)}
+.intro__welcome{font-family:var(--kufi);font-size:clamp(17px,4.6vw,24px);color:#fff1d9;text-shadow:0 0 18px rgba(255,180,95,.6);
+  opacity:0;animation:fadeIn 1.2s ease 1.2s forwards}
+
+/* the logo: focus-pull in, backlight flickers on, rings pulse out, light sweeps across */
+.intro__mark{position:relative;width:100%;opacity:0;animation:fadeIn 2.2s ease 1s forwards;transition:opacity .9s ease}
+.intro__mark .mark--halo,.intro__mark .mark--rim{opacity:0;animation:flicker 2.2s linear 1.6s forwards}
+.intro__mark::before,.intro__mark::after{content:"";position:absolute;inset:-34% -9%;border-radius:50%;border:1px solid rgba(255,214,150,.75);
+  opacity:0;animation:ring 3.2s ease-out 2.6s infinite;pointer-events:none}
+.intro__mark::after{animation-delay:4.2s}
+@keyframes ring{0%{transform:scale(.72);opacity:.75}100%{transform:scale(1.55);opacity:0}}
+.mark--shine{position:absolute;inset:0;mix-blend-mode:screen;
+  background:linear-gradient(105deg,transparent 42%,rgba(255,238,205,.95) 50%,transparent 58%) 130% 0/260% 100% no-repeat;
+  animation:shine 3.8s ease-in-out 3s infinite}
+@keyframes shine{0%{background-position:130% 0}55%,100%{background-position:-30% 0}}
+
+/* equalizer under the logo */
+.viz{display:flex;align-items:center;justify-content:center;gap:2px;height:26px;width:92%;direction:ltr;opacity:0;animation:fadeIn 1s ease 2.2s forwards}
+.viz i{flex:1;max-width:4px;height:100%;border-radius:3px;background:linear-gradient(180deg,#ffe2b3,#ffb35a 50%,#ffe2b3);
+  transform:scaleY(.12);animation:viz ease-in-out infinite alternate;box-shadow:0 0 6px rgba(255,179,90,.6)}
+@keyframes viz{from{transform:scaleY(.1)}to{transform:scaleY(var(--h))}}
+
+.intro__enter{display:flex;flex-direction:column;align-items:center;gap:1px;padding:11px 34px;border-radius:999px;
+  background:linear-gradient(180deg,#ffd29a,var(--glow) 60%,#f59a3c);color:#1a1108;
+  box-shadow:0 14px 40px -10px var(--glow-soft),inset 0 1px 0 rgba(255,255,255,.55);
+  opacity:0;animation:fadeIn 1s ease 2.5s forwards,pulse 2.4s ease-in-out 3.5s infinite}
+.intro__enter span{font-family:var(--kufi);font-size:20px;font-weight:600;line-height:1.25}
 .intro__enter em{font-style:normal;font-size:11.5px;opacity:.75}
-.intro__quiet{font-size:13px;color:var(--muted);padding:8px;text-decoration:underline;text-underline-offset:4px;opacity:0;animation:fadeIn 1s ease 2.8s forwards}
-@keyframes pulse{0%,100%{box-shadow:0 14px 40px -10px var(--glow-soft),0 0 0 0 rgba(255,179,90,0)}50%{box-shadow:0 14px 40px -10px var(--glow-soft),0 0 0 12px rgba(255,179,90,.12)}}
+.intro__quiet{font-size:13px;color:#e9d6b6;padding:6px;text-decoration:underline;text-underline-offset:4px;opacity:0;animation:fadeIn 1s ease 2.9s forwards}
+@keyframes pulse{0%,100%{box-shadow:0 14px 40px -10px var(--glow-soft),0 0 0 0 rgba(255,179,90,0)}50%{box-shadow:0 14px 40px -10px var(--glow-soft),0 0 0 12px rgba(255,179,90,.14)}}
 @keyframes fadeIn{to{opacity:1}}
 @keyframes flicker{0%{opacity:0}6%{opacity:.7}8%{opacity:.05}14%{opacity:.9}16%{opacity:.15}22%{opacity:.95}24%{opacity:.4}34%{opacity:1}100%{opacity:1}}
-/* opening */
-.intro.opening .door--r{transform:rotateY(-108deg)}
-.intro.opening .door--l{transform:rotateY(108deg)}
+
+/* opening: fly through the arch into the light */
+.intro.opening .portal{transform:scale(11);opacity:0}
+.intro.opening .intro__center{opacity:0;transition:opacity .9s ease}
+.intro.opening .intro__mark{animation:none;opacity:0}
 .intro.opening .intro__beam{opacity:1}
-.intro.opening .intro__center{transform:translateZ(500px) scale(1.4);opacity:0}
-.intro.opening .gate::after{opacity:0;animation:none}
 body:not(.is-intro) .intro{opacity:0;visibility:hidden;pointer-events:none}
 
 /* ── Hero (scroll-driven: --p 0→1) ─────────────────────────── */
@@ -479,3 +501,6 @@ body:not(.is-intro) .intro{opacity:0;visibility:hidden;pointer-events:none}
   .card__f .price{font-size:19px}
 }
 @media (min-width:900px){.sheet__card::before{display:none}}
+
+/* Arabic must not be letter-spaced: it breaks the joined script */
+.hero__eyebrow,.hero__line,.stat span,.kicker,.intro__welcome{letter-spacing:0}

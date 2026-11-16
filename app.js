@@ -54,7 +54,7 @@
   const intro = $("#intro");
   function openGate(withSound) {
     if (!document.body.classList.contains("is-intro") || intro.classList.contains("opening")) return;
-    if (withSound && A) { A.start(); setTimeout(() => A.gate(), 60); }
+    if (withSound && A) { A.start(1.6); A.gate(); }
     intro.classList.add("opening");
     setTimeout(() => {
       document.body.classList.remove("is-intro");
@@ -63,6 +63,14 @@
     }, reduce ? 0 : 1300);
     store.set("wanas-intro", "1");
   }
+  // gate effects: equalizer bars under the logo + sparks rising inside the arch
+  $("#viz").innerHTML = Array.from({ length: 33 }, (_, i) => {
+    const edge = 1 - Math.abs(i - 16) / 16;                       // taller toward the centre
+    return `<i style="--h:${(.25 + edge * .75).toFixed(2)};animation-duration:${(.7 + Math.random() * .9).toFixed(2)}s;animation-delay:-${(Math.random() * 1.5).toFixed(2)}s"></i>`;
+  }).join("");
+  $("#portalFx").insertAdjacentHTML("beforeend", Array.from({ length: 16 }, () =>
+    `<b class="spark" style="left:${(18 + Math.random() * 64).toFixed(1)}%;--s:${(2 + Math.random() * 4).toFixed(1)}px;animation-duration:${(5 + Math.random() * 6).toFixed(1)}s;animation-delay:-${(Math.random() * 10).toFixed(1)}s"></b>`).join(""));
+
   const forceIntro = new URLSearchParams(location.search).has("intro");
   if (reduce || (store.get("wanas-intro") === "1" && !forceIntro)) {
     intro.classList.add("opening"); document.body.classList.remove("is-intro");
@@ -309,7 +317,7 @@
 
   // relight the sign on tap
   $("#heroMark").addEventListener("click", () => {
-    const m = $("#heroMark"); m.classList.remove("relight"); void m.offsetWidth; m.classList.add("relight"); A?.gate();
+    const m = $("#heroMark"); m.classList.remove("relight"); void m.offsetWidth; m.classList.add("relight"); A?.bloom();
   });
 
   // counters
