@@ -12,6 +12,7 @@
   const fmt = p => (p == null ? "" : Number.isInteger(p) ? String(p) : p.toFixed(2));
   const SAR = '<svg class="sar" aria-label="ريال"><use href="#sar"/></svg>';
   const DAILY = 2000;
+  const mid = p => p ? p.replace("assets/img/", "assets/mid/") : p;
   const isParty = s => /حفلات/.test(s.name);
   const store = { get(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set(k, v) { try { sessionStorage.setItem(k, v); } catch (e) {} } };
 
@@ -60,7 +61,7 @@
       document.body.classList.remove("is-intro");
       $$(".hero .reveal").forEach(el => el.classList.add("in"));
       startCounters();
-    }, reduce ? 0 : 1300);
+    }, reduce ? 0 : 1500);
     store.set("wanas-intro", "1");
   }
   // gate effects: equalizer bars under the logo + sparks rising inside the arch
@@ -69,7 +70,7 @@
     return `<i style="--h:${(.25 + edge * .75).toFixed(2)};animation-duration:${(.7 + Math.random() * .9).toFixed(2)}s;animation-delay:-${(Math.random() * 1.5).toFixed(2)}s"></i>`;
   }).join("");
   $("#portalFx").insertAdjacentHTML("beforeend", Array.from({ length: 16 }, () =>
-    `<b class="spark" style="left:${(18 + Math.random() * 64).toFixed(1)}%;--s:${(2 + Math.random() * 4).toFixed(1)}px;animation-duration:${(5 + Math.random() * 6).toFixed(1)}s;animation-delay:-${(Math.random() * 10).toFixed(1)}s"></b>`).join(""));
+    `<b class="spark" style="left:${(4 + Math.random() * 92).toFixed(1)}%;--s:${(2 + Math.random() * 4).toFixed(1)}px;animation-duration:${(5 + Math.random() * 6).toFixed(1)}s;animation-delay:-${(Math.random() * 10).toFixed(1)}s"></b>`).join(""));
 
   const forceIntro = new URLSearchParams(location.search).has("intro");
   if (reduce || (store.get("wanas-intro") === "1" && !forceIntro)) {
@@ -99,7 +100,7 @@
   ];
   $("#modeTiles").innerHTML = MENU.map((c, i) => `
     <button class="tile reveal" data-mode="${i}">
-      <img class="tile__img" src="${esc(tileImg[i])}" alt="" loading="lazy" decoding="async">
+      <img class="tile__img" src="${esc(mid(tileImg[i]))}" alt="" loading="lazy" decoding="async">
       <span class="tile__arrow" aria-hidden="true">←</span>
       <div class="tile__body">
         <div class="tile__k">${KICK[i]}</div>
@@ -120,7 +121,7 @@
   /* ── Rendering ───────────────────────────────────────── */
   function plate(it, big = false) {
     if (!it.img) return `<div class="plate plate--empty" aria-hidden="true"><i></i></div>`;
-    const src = big ? it.img : (it.thumb || it.img);
+    const src = big ? mid(it.img) : (it.thumb || it.img);
     return `<div class="plate"><img src="${esc(src)}" alt="" loading="lazy" decoding="async"></div>`;
   }
   function kcal(it) {
@@ -146,7 +147,7 @@
         </div></button>`;
     }
     const hero = i === 0 && (sec.items.length > 2 || sec.items.length === 1);
-    return `<button class="card${hero ? " card--hero" : ""}" data-k="${it._k}" style="transition-delay:${(i % 2) * 90 + Math.min(i, 4) * 40}ms">
+    return `<button class="card${hero ? " card--hero" : ""}" data-k="${it._k}" style="transition-delay:${(i % 2) * 60}ms">
       ${plate(it, hero)}
       <div class="card__b">
         <p class="card__n">${esc(it.name)}</p>
@@ -162,7 +163,7 @@
       <div class="flow__h"><h3>تصفّح الأقسام</h3><small>اسحب ←</small></div>
       <div class="flow__track" id="flow">${c.sections.map((s, si) => `
         <button class="fc" data-go="${si}">
-          ${s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy" decoding="async">` : ""}
+          ${s.img ? `<img src="${esc(mid(s.img))}" alt="" decoding="async">` : ""}
           <div class="fc__b"><div class="fc__no">${ar(String(si + 1).padStart(2, "0"))}</div>
             <div class="fc__t">${esc(s.name)}</div><div class="fc__m">${ar(s.items.length)} صنف</div></div>
         </button>`).join("")}</div></section>`;
@@ -174,7 +175,7 @@
       const cals = s.items.filter(i => i.cal).map(i => i.cal);
       return `<section class="sec" id="s-${si}" data-si="${si}" aria-labelledby="h-${si}">
         <div class="banner">
-          ${s.img ? `<img src="${esc(s.img)}" alt="" loading="lazy" decoding="async">` : ""}
+          ${s.img ? `<img src="${esc(mid(s.img))}" alt="" loading="lazy" decoding="async">` : ""}
           <div class="banner__b">
             <div class="sec__no">${ar(String(si + 1).padStart(2, "0"))}</div>
             <h2 class="sec__title" id="h-${si}" aria-label="${esc(s.name)}">${splitChars(s.name)}</h2>
@@ -193,6 +194,8 @@
     rail.insertAdjacentHTML("beforeend", c.sections.map((s, si) => `<button class="chip" data-go="${si}">${esc(s.name)}</button>`).join(""));
     $$("[data-go]").forEach(ch => ch.addEventListener("click", () => { A?.tick(); scrollToEl($("#s-" + ch.dataset.go), barH() - 2); }));
 
+    // once the first screen is up, pull the rest of the photos in the background
+    setTimeout(() => $$("#menu img[loading=lazy]").forEach(im => { im.loading = "eager"; }), 1200);
     observe();
     wireTilt();
     wireFlow();
@@ -231,7 +234,7 @@
     io?.disconnect(); spy?.disconnect();
     io = new IntersectionObserver(es => es.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
-    }), { rootMargin: "0px 0px -10% 0px", threshold: .06 });
+    }), { rootMargin: "0px 0px 25% 0px", threshold: 0 });
     $$(".reveal:not(.in), .card, .sec").forEach(el => io.observe(el));
     spy = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive(+e.target.dataset.si); }),
       { rootMargin: `-${barH() + 10}px 0px -65% 0px` });
@@ -244,7 +247,6 @@
   function setActive(i) {
     const rail = $("#rail"), chips = $$(".chip", rail), ch = chips[i];
     if (!ch) return;
-    if (i !== activeI && activeI !== -1) A?.tick();
     activeI = i;
     chips.forEach((c, k) => c.classList.toggle("is-on", k === i));
     placeInk();
@@ -410,7 +412,7 @@
   /* ── Item sheet with shared-element flight ───────────── */
   function openItem(it, fromEl) {
     const sheet = $("#sheet"), media = $("#sheetMedia");
-    media.innerHTML = it.img ? `<img src="${esc(it.img)}" alt="${esc(it.name)}">` : `<div class="plate plate--empty" style="height:100%"><i></i></div>`;
+    media.innerHTML = it.img ? `<img src="${esc(mid(it.img))}" alt="${esc(it.name)}">` : `<div class="plate plate--empty" style="height:100%"><i></i></div>`;
     let viz = "";
     if (it.cal) {
       const pct = Math.min(100, it.cal / DAILY * 100), C = 2 * Math.PI * 32;

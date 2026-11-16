@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=4">
+<link rel="stylesheet" href="styles.css?v=7">
 <link rel="preload" as="image" href="assets/logo-mask.png">
 <link rel="icon" href="data:,">
 </head>
@@ -31,44 +31,29 @@
   <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
 </svg>
 
-<!-- Welcome gate: a lit archway you fly through -->
+<!-- Welcome gate: lattice shutters, the logo spelled out letter by letter -->
 <div class="intro" id="intro" role="dialog" aria-label="أهلاً بكم في ونس برو">
-  <div class="intro__beam"></div>
-  <div class="portal">
-    <svg viewBox="0 0 400 640" aria-hidden="true">
-      <defs>
-        <radialGradient id="wallG" cx="50%" cy="44%" r="62%">
-          <stop offset="0" stop-color="#ffbe6e" stop-opacity=".9"/>
-          <stop offset=".42" stop-color="#6e4c27" stop-opacity=".92"/>
-          <stop offset="1" stop-color="#150e08"/>
-        </radialGradient>
-        <linearGradient id="floorG" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffb35a" stop-opacity="0"/>
-          <stop offset="1" stop-color="#ffb35a" stop-opacity=".3"/>
-        </linearGradient>
-        <clipPath id="archClip" clipPathUnits="objectBoundingBox"><path d="M.15 1V.406Q.15 .14 .5 .047Q.85 .14 .85 .406V1Z"/></clipPath>
-      </defs>
-      <g class="arch-fill">
-        <path d="M60 640V260Q60 90 200 30Q340 90 340 260V640Z" fill="url(#wallG)"/>
-        <rect x="60" y="520" width="280" height="120" fill="url(#floorG)"/>
-      </g>
-      <path class="arch" pathLength="1" d="M60 640V260Q60 90 200 30Q340 90 340 260V640"/>
-      <path class="arch arch--2" pathLength="1" d="M36 640V256Q36 66 200 2Q364 66 364 256V640"/>
-      <path class="arch arch--3" pathLength="1" d="M12 640V252Q12 42 200 -26Q388 42 388 252V640"/>
-    </svg>
-    <div class="portal__fx" id="portalFx" aria-hidden="true"><div class="rays"></div></div>
-    <div class="intro__center">
-      <div class="intro__welcome">أهلاً وسهلاً</div>
-      <div class="intro__mark">
-        <div class="mark mark--halo"></div>
-        <div class="mark mark--rim"></div>
-        <div class="mark mark--solid"></div>
-        <div class="mark mark--shine"></div>
-      </div>
-      <div class="viz" id="viz" aria-hidden="true"></div>
-      <button class="intro__enter" id="enter"><span>ادخل</span><em>♪ مع الموسيقى</em></button>
-      <button class="intro__quiet" id="enterQuiet">دخول بدون صوت</button>
+  <div class="slats" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="portal__fx" id="portalFx" aria-hidden="true"></div>
+  <div class="intro__center">
+    <div class="disc" aria-hidden="true">
+      <svg viewBox="0 0 200 200"><circle class="disc__ring" cx="100" cy="100" r="96"/><circle class="disc__ring disc__ring--2" cx="100" cy="100" r="86"/></svg>
     </div>
+    <div class="intro__welcome">أهلاً وسهلاً</div>
+    <div class="intro__mark" aria-label="ونس برو">
+      <div class="mark mark--halo"></div>
+      <div class="mark mark--rim"></div>
+      <span class="mark ltr" style="--l:81.7%;--r:0%;--i:0"></span>
+      <span class="mark ltr" style="--l:40.6%;--r:18.3%;--i:1"></span>
+      <span class="mark ltr" style="--l:28.9%;--r:59.4%;--i:2"></span>
+      <span class="mark ltr" style="--l:16.1%;--r:71.1%;--i:3"></span>
+      <span class="mark ltr" style="--l:6%;--r:83.9%;--i:4"></span>
+      <span class="mark ltr" style="--l:0%;--r:94%;--i:5"></span>
+      <div class="mark mark--shine"></div>
+    </div>
+    <div class="viz" id="viz" aria-hidden="true"></div>
+    <button class="intro__enter" id="enter"><span>ادخل</span><em>♪ مع الموسيقى</em></button>
+    <button class="intro__quiet" id="enterQuiet">دخول بدون صوت</button>
   </div>
 </div>
 
@@ -159,8 +144,8 @@
   </article>
 </div>
 
-<script src="data/menu.js?v=4"></script>
-<script src="audio.js?v=4"></script>
-<script src="app.js?v=4"></script>
+<script src="data/menu.js?v=7"></script>
+<script src="audio.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>

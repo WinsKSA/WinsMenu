@@ -106,6 +106,18 @@ try:
 except ImportError:
     print("Pillow missing: no thumbnails", file=sys.stderr)
 
+# medium copies (800px) for banners, feature cards and the dish sheet
+try:
+    import glob
+    os.makedirs(os.path.join(ROOT, "assets", "mid"), exist_ok=True)
+    for p in glob.glob(os.path.join(IMG_DIR, "*.jpg")):
+        d = os.path.join(ROOT, "assets", "mid", os.path.basename(p))
+        if not os.path.exists(d):
+            im = Image.open(p).convert("RGB"); im.thumbnail((800, 800), Image.LANCZOS)
+            im.save(d, quality=80, optimize=True, progressive=True)
+except NameError:
+    pass
+
 # page data
 for c in menu:
     for s in c["sections"]:

@@ -9,10 +9,10 @@ window.WanasAudio = (() => {
 
   // chords, all inside D Hijaz (D Eb F# G A Bb C)
   const CHORDS = [
-    [38, 50, 57, 62, 66],   // D
-    [43, 55, 58, 62, 67],   // Gm
-    [36, 48, 55, 60, 63],   // Cm
-    [38, 50, 57, 62, 66],   // D
+    [50, 57, 62, 66, 69],   // D
+    [55, 58, 62, 67, 70],   // Gm
+    [48, 55, 60, 63, 67],   // Cm
+    [50, 57, 62, 66, 69],   // D
   ];
   // melody: [beat, midi, velocity] per bar, 8 bars
   const MELODY = [
@@ -39,7 +39,7 @@ window.WanasAudio = (() => {
     comp = ctx.createDynamicsCompressor(); comp.threshold.value = -20; comp.ratio.value = 3; comp.attack.value = .02; comp.release.value = .4;
     const master = ctx.createGain(); master.gain.value = .9; comp.connect(master); master.connect(ctx.destination);
     verb = ctx.createConvolver(); verb.buffer = impulse();
-    const wet = ctx.createGain(); wet.gain.value = .32; verb.connect(wet); wet.connect(comp);
+    const wet = ctx.createGain(); wet.gain.value = .22; verb.connect(wet); wet.connect(comp);
     musicBus = ctx.createGain(); musicBus.gain.value = 0; musicBus.connect(comp); musicBus.connect(verb);
     sfxBus = ctx.createGain(); sfxBus.gain.value = 1; sfxBus.connect(comp); sfxBus.connect(verb);
   }
@@ -88,6 +88,7 @@ window.WanasAudio = (() => {
     MELODY[b].forEach(([beat, n, v]) => bell(n, t + beat * BEAT, .085 * v, musicBus));
   }
   function schedule() {
+    if (next < ctx.currentTime) next = ctx.currentTime + .1;
     while (next < ctx.currentTime + 1.2) { playBar(barI, next); next += BAR; barI++; }
     timer = setTimeout(schedule, 300);
   }
@@ -130,8 +131,8 @@ window.WanasAudio = (() => {
   function gate() {
     if (!on) return; const t = ctx.currentTime + .03;
     const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = "sine"; o.frequency.setValueAtTime(55, t); o.frequency.exponentialRampToValueAtTime(73.4, t + 1.4);
-    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.22, t + .5); g.gain.linearRampToValueAtTime(0, t + 2.4);
+    o.type = "sine"; o.frequency.setValueAtTime(110, t); o.frequency.exponentialRampToValueAtTime(146.8, t + 1.4);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.09, t + .5); g.gain.linearRampToValueAtTime(0, t + 2.4);
     o.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + 2.5);
     air(t, 180, 2200, 1.7, .06);
     [62, 69, 74, 78, 81, 86].forEach((m, i) => bell(m, t + .35 + i * .15, .07 - i * .006, sfxBus, 3));
@@ -142,6 +143,12 @@ window.WanasAudio = (() => {
       p.connect(pg); pg.connect(sfxBus); p.start(t + .9); p.stop(t + 4.7);
     });
   }
+
+  document.addEventListener("visibilitychange", () => {
+    if (!ctx || !on) return;
+    if (document.hidden) { clearTimeout(timer); timer = null; ctx.suspend(); }
+    else ctx.resume().then(() => { if (on && !timer) { next = ctx.currentTime + .2; schedule(); } });
+  });
 
   return {
     get on() { return on; },
