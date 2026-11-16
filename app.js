@@ -49,7 +49,18 @@
   document.body.appendChild(snd);
   const sndUI = v => { snd.classList.toggle("on", v); $(".snd__t", snd).textContent = v ? "الموسيقى تعمل" : "الموسيقى متوقفة"; snd.setAttribute("aria-pressed", v); };
   sndUI(false);
-  snd.addEventListener("click", () => A && A.toggle());
+  snd.addEventListener("click", () => { if (!A) return; A.toggle(); store.set("wanas-muted", A.on ? "0" : "1"); });
+  // Music is on by default. Browsers only allow sound after a touch or click, so when the gate is
+  // skipped (returning visitor) the first tap anywhere starts it, unless the visitor muted it.
+  {
+    const kick = e => {
+      if (document.body.classList.contains("is-intro")) return;          // the gate's own button starts it
+      ["click", "touchend", "keydown"].forEach(t => removeEventListener(t, kick, true));
+      if (e.target.closest && e.target.closest(".snd")) return;           // the sound button decides for itself
+      if (A && !A.on && store.get("wanas-muted") !== "1") A.start();
+    };
+    ["click", "touchend", "keydown"].forEach(t => addEventListener(t, kick, true));
+  }
   document.addEventListener("wanas-sound", e => sndUI(e.detail));
 
   /* ── Welcome gate ────────────────────────────────────── */
@@ -80,7 +91,6 @@
     requestAnimationFrame(() => { $$(".hero .reveal").forEach(el => el.classList.add("in")); $("#heroMark").classList.add("spell"); });
   } else {
     $("#enter").addEventListener("click", e => { e.stopPropagation(); openGate(true); });
-    $("#enterQuiet").addEventListener("click", e => { e.stopPropagation(); openGate(false); });
     setTimeout(() => $("#enter").focus({ preventScroll: true }), 2500);
     // type the name out, one letter at a time, in step with the logo
     const NAME = "ونس برو", nameEl = $("#introName");

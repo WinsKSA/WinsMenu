@@ -86,7 +86,7 @@ body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:300
 .ltr{position:absolute;inset:0;background:linear-gradient(180deg,#1d150d,#050302);
   clip-path:inset(-5% var(--r) -5% var(--l));opacity:0;
   animation:ltrIn .4s var(--ease-out) forwards;animation-delay:calc(.9s + var(--i) * .5s)}
-@keyframes ltrIn{from{opacity:0;transform:translateY(30%) scale(1.15)}60%{opacity:1;transform:translateY(-4%) scale(1.02)}to{opacity:1;transform:none}}
+@keyframes ltrIn{from{opacity:0;transform:perspective(500px) rotateY(90deg)}55%{opacity:1}80%{transform:perspective(500px) rotateY(-12deg)}to{opacity:1;transform:none}}
 .intro__mark .mark--halo,.intro__mark .mark--rim{opacity:0;animation:flicker 1.8s linear 3.9s forwards}
 .intro__mark::before,.intro__mark::after{content:"";position:absolute;inset:-34% -9%;border-radius:50%;border:1px solid rgba(255,214,150,.7);
   opacity:0;animation:ring 3.2s ease-out 4.8s infinite;pointer-events:none}
@@ -585,3 +585,10 @@ body.is-intro{overflow:hidden}                         /* no scrolling the page 
   .hero__mark .mark--halo,.hero__mark .mark--rim{opacity:1!important}
 }
 @media (max-width:380px){.seg button{font-size:14px;height:38px}.bar__top{gap:5px;padding-inline:10px}.icon-btn{width:42px;height:42px;font-size:18px}}
+
+/* each letter turns in a quarter-turn (90 degrees) around its own centre */
+.ltr{transform-origin:calc((var(--l) + 100% - var(--r)) / 2) 50%;backface-visibility:visible}
+.intro__mark .ltr{animation-duration:.6s}
+.hero__mark.spell .ltr{animation-duration:.6s}
+/* solid header: dishes must not show through it while scrolling */
+.bar{background:#0a0806;backdrop-filter:none;-webkit-backdrop-filter:none}
