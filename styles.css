@@ -165,9 +165,13 @@ body:not(.is-intro) .intro{opacity:0;visibility:hidden;pointer-events:none}
 /* ── Marquee ───────────────────────────────────────────────── */
 .marquee{position:relative;overflow:hidden;padding:18px 0;border-block:1px solid var(--line);background:var(--ink);direction:ltr;margin-top:-1px}
 .marquee__track{display:flex;width:max-content;gap:28px;animation:marq 38s linear infinite;will-change:transform}
-.marquee__track span{font-family:var(--kufi);font-size:clamp(28px,8vw,56px);font-weight:600;white-space:nowrap;line-height:1.2;
+.marquee__track .mq{font-family:var(--kufi);font-size:clamp(28px,8vw,56px);font-weight:600;white-space:nowrap;line-height:1.2;
   color:transparent;-webkit-text-stroke:1px rgba(255,200,140,.42)}
-.marquee__track span:nth-child(4n+1){color:var(--text);-webkit-text-stroke:0}
+.marquee__track .mq:nth-child(4n+1){color:var(--text);-webkit-text-stroke:0}
+.marquee__track .mq{padding:0;cursor:pointer;transition:color .3s,-webkit-text-stroke-color .3s,scale .15s}
+.marquee__track .mq:hover,.marquee__track .mq:focus-visible{color:var(--glow);-webkit-text-stroke:0}
+.marquee__track .mq:active{scale:.95}
+.marquee:hover .marquee__track,.marquee:focus-within .marquee__track,.marquee.hold .marquee__track{animation-play-state:paused}
 .marquee__track b{color:var(--glow);font-size:clamp(14px,3vw,22px);align-self:center}
 @keyframes marq{to{transform:translateX(-50%)}}
 

@@ -96,9 +96,21 @@
     [MENU.length, "قائمة"],
   ].map(([n, l]) => `<div class="stat"><b data-count="${n}">${ar(0)}</b><span>${l}</span></div>`).join("");
 
-  const names = MENU.flatMap(c => c.sections.map(s => s.name));
-  const strip = names.map(n => `<span>${esc(n)}</span><b>◆</b>`).join("");
-  $("#marquee").innerHTML = strip + strip;
+  // news bar: every section name is a button that jumps straight to that section's dishes
+  const strip = dup => MENU.flatMap((c, ci) => c.sections.map((s, si) =>
+    `<button class="mq" data-jump="${ci}.${si}"${dup ? ' tabindex="-1" aria-hidden="true"' : ""}>${esc(s.name)}</button><b aria-hidden="true">◆</b>`)).join("");
+  $("#marquee").innerHTML = strip(false) + strip(true);
+  // hold the bar still while a finger is on it, so the name under the finger can be tapped
+  { const bar = $("#marqueeBar"); let t;
+    bar.addEventListener("touchstart", () => { clearTimeout(t); bar.classList.add("hold"); }, { passive: true });
+    bar.addEventListener("touchend", () => { t = setTimeout(() => bar.classList.remove("hold"), 900); }); }
+  $("#marquee").addEventListener("click", e => {
+    const b = e.target.closest("[data-jump]"); if (!b) return;
+    const [ci, si] = b.dataset.jump.split(".").map(Number);
+    A?.tap();
+    if (ci !== mode) setMode(ci, false);              // render that menu immediately
+    requestAnimationFrame(() => { const t = $("#s-" + si); if (t) scrollToEl(t, barH() - 2); });
+  });
 
   const tileImg = [
     (MENU[0]?.sections.find(s => /بيتزا/.test(s.name)) || MENU[0]?.sections[0])?.img,
@@ -209,7 +221,10 @@
   }
 
   function scrollToEl(el, offset) {
-    window.scrollTo({ top: el.getBoundingClientRect().top + scrollY - offset, behavior: reduce ? "auto" : "smooth" });
+    const top = el.getBoundingClientRect().top + scrollY - offset, d = top - scrollY, far = innerHeight * 1.5;
+    // long trips: jump most of the way at once, then glide the last stretch (a smooth scroll across the whole menu is slow and can stall)
+    if (!reduce && Math.abs(d) > far) window.scrollTo({ top: top - Math.sign(d) * innerHeight * .5, behavior: "instant" });
+    window.scrollTo({ top, behavior: reduce ? "auto" : "smooth" });
   }
 
   function setMode(m, user) {
