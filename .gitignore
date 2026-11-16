@@ -1,0 +1,5 @@
+tools/*.html
+tools/*.txt
+tools/*.log
+tools/*.png
+__pycache__/
